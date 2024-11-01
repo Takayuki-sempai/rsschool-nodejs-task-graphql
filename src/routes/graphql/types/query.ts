@@ -1,4 +1,5 @@
 import {
+  GraphQLBoolean,
   GraphQLEnumType,
   GraphQLFloat,
   GraphQLInt,
@@ -47,6 +48,16 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
     },
   });
 
+  const Profile = new GraphQLObjectType({
+    name: 'Profile',
+    fields: {
+      id: { type: new GraphQLNonNull(UUIDType) },
+      isMale: { type: new GraphQLNonNull(GraphQLBoolean) },
+      yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
+      memberType: { type: new GraphQLNonNull(MemberType) },
+    },
+  });
+
   return new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
@@ -61,6 +72,10 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
       posts: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))),
         resolve: async () => await prisma.post.findMany(),
+      },
+      profiles: {
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Profile))),
+        resolve: async () => await prisma.profile.findMany(),
       },
     },
   });

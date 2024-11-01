@@ -38,6 +38,15 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
     },
   });
 
+  const Post = new GraphQLObjectType({
+    name: 'Post',
+    fields: {
+      id: { type: new GraphQLNonNull(UUIDType) },
+      title: { type: new GraphQLNonNull(GraphQLString) },
+      content: { type: new GraphQLNonNull(GraphQLString) },
+    },
+  });
+
   return new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
@@ -48,6 +57,10 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
       users: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
         resolve: async () => await prisma.user.findMany(),
+      },
+      posts: {
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))),
+        resolve: async () => await prisma.post.findMany(),
       },
     },
   });

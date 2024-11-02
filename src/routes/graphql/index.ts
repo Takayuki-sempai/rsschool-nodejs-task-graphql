@@ -1,14 +1,17 @@
 import { FastifyPluginAsyncTypebox } from '@fastify/type-provider-typebox';
 import { createGqlResponseSchema, gqlResponseSchema } from './schemas.js';
 import { graphql, GraphQLSchema } from 'graphql';
-import { createRootQueryType } from './types/query.js';
+import {RootQueryType} from './types/query.js';
+import {GraphQLObjectType} from "graphql/index.js";
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
   const { prisma } = fastify;
 
   const handlerSchema = new GraphQLSchema({
-    query: await createRootQueryType(prisma),
+    query: RootQueryType as GraphQLObjectType,
   });
+
+  const context = { prisma };
 
   fastify.route({
     url: '/',
@@ -24,6 +27,7 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
         schema: handlerSchema,
         source: req.body.query,
         variableValues: req.body.variables,
+        contextValue: context,
       });
     },
   });

@@ -34,15 +34,6 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
     },
   });
 
-  const User = new GraphQLObjectType({
-    name: 'User',
-    fields: {
-      id: { type: new GraphQLNonNull(UUIDType) },
-      name: { type: new GraphQLNonNull(GraphQLString) },
-      balance: { type: new GraphQLNonNull(GraphQLFloat) },
-    },
-  });
-
   const Post = new GraphQLObjectType({
     name: 'Post',
     fields: {
@@ -62,6 +53,17 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
     },
   });
 
+  const User = new GraphQLObjectType({
+    name: 'User',
+    fields: {
+      id: { type: new GraphQLNonNull(UUIDType) },
+      name: { type: new GraphQLNonNull(GraphQLString) },
+      balance: { type: new GraphQLNonNull(GraphQLFloat) },
+      profile: { type: Profile },
+      posts: { type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))) },
+    },
+  });
+
   return new GraphQLObjectType({
     name: 'RootQueryType',
     fields: {
@@ -70,7 +72,7 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
         resolve: async () => await prisma.memberType.findMany(),
       },
       memberType: {
-        type: new GraphQLNonNull(MemberType),
+        type: MemberType,
         args: {
           id: { type: new GraphQLNonNull(MemberTypeId) },
         },
@@ -84,7 +86,7 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
         resolve: async () => await prisma.user.findMany(),
       },
       user: {
-        type: new GraphQLNonNull(User),
+        type: User,
         args: {
           id: { type: new GraphQLNonNull(UUIDType) },
         },
@@ -98,7 +100,7 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
         resolve: async () => await prisma.post.findMany(),
       },
       post: {
-        type: new GraphQLNonNull(Post),
+        type: Post,
         args: {
           id: { type: new GraphQLNonNull(UUIDType) },
         },
@@ -112,7 +114,7 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
         resolve: async () => await prisma.profile.findMany(),
       },
       profile: {
-        type: new GraphQLNonNull(Profile),
+        type: Profile,
         args: {
           id: { type: new GraphQLNonNull(UUIDType) },
         },

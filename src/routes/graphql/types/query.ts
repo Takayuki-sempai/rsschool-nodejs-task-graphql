@@ -11,6 +11,10 @@ import {
 import { PrismaClient } from '@prisma/client';
 import { UUIDType } from './uuid.js';
 
+interface IStringIdArg {
+  id: string;
+}
+
 export const createRootQueryType = async (prisma: PrismaClient) => {
   const MemberTypeId = new GraphQLEnumType({
     name: 'MemberTypeId',
@@ -64,6 +68,16 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
       memberTypes: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(MemberType))),
         resolve: async () => await prisma.memberType.findMany(),
+      },
+      memberType: {
+        type: new GraphQLNonNull(MemberType),
+        args: {
+          id: { type: new GraphQLNonNull(MemberTypeId) },
+        },
+        resolve: async (_source, { id }: IStringIdArg) =>
+          await prisma.memberType.findUnique({
+            where: { id: id },
+          }),
       },
       users: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),

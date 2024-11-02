@@ -58,16 +58,16 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
       memberType: {
         type: new GraphQLNonNull(MemberType),
         resolve: async (source: IMemberTypeIdArg) =>
-            prisma.memberType.findUnique({
-              where: { id: source.memberTypeId },
-            }),
+          prisma.memberType.findUnique({
+            where: { id: source.memberTypeId },
+          }),
       },
     },
   });
 
-  const User = new GraphQLObjectType({
+  const User: GraphQLObjectType = new GraphQLObjectType({
     name: 'User',
-    fields: {
+    fields: () => ({
       id: { type: new GraphQLNonNull(UUIDType) },
       name: { type: new GraphQLNonNull(GraphQLString) },
       balance: { type: new GraphQLNonNull(GraphQLFloat) },
@@ -85,7 +85,33 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
             where: { authorId: source.id },
           }),
       },
-    },
+      userSubscribedTo: {
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
+        resolve: async (source: IStringIdArg) =>
+          await prisma.user.findMany({
+            where: {
+              subscribedToUser: {
+                some: {
+                  subscriberId: source.id,
+                },
+              },
+            },
+          }),
+      },
+      subscribedToUser: {
+        type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
+        resolve: async (source: IStringIdArg) =>
+          await prisma.user.findMany({
+            where: {
+              userSubscribedTo: {
+                some: {
+                  authorId: source.id,
+                },
+              },
+            },
+          }),
+      },
+    }),
   });
 
   return new GraphQLObjectType({

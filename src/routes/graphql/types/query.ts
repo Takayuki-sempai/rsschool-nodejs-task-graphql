@@ -83,13 +83,43 @@ export const createRootQueryType = async (prisma: PrismaClient) => {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
         resolve: async () => await prisma.user.findMany(),
       },
+      user: {
+        type: new GraphQLNonNull(User),
+        args: {
+          id: { type: new GraphQLNonNull(UUIDType) },
+        },
+        resolve: async (_source, { id }: IStringIdArg) =>
+            await prisma.user.findUnique({
+              where: { id: id },
+            }),
+      },
       posts: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))),
         resolve: async () => await prisma.post.findMany(),
       },
+      post: {
+        type: new GraphQLNonNull(Post),
+        args: {
+          id: { type: new GraphQLNonNull(UUIDType) },
+        },
+        resolve: async (_source, { id }: IStringIdArg) =>
+            await prisma.post.findUnique({
+              where: { id: id },
+            }),
+      },
       profiles: {
         type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Profile))),
         resolve: async () => await prisma.profile.findMany(),
+      },
+      profile: {
+        type: new GraphQLNonNull(Profile),
+        args: {
+          id: { type: new GraphQLNonNull(UUIDType) },
+        },
+        resolve: async (_source, { id }: IStringIdArg) =>
+            await prisma.profile.findUnique({
+              where: { id: id },
+            }),
       },
     },
   });

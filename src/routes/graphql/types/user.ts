@@ -9,8 +9,13 @@ import {
 import { UUIDType } from './uuid.js';
 import { Profile } from './profile.js';
 import { Post } from './post.js';
-import { GraphQLFieldConfig } from 'graphql/type/definition.js';
+import {GraphQLFieldConfig, GraphQLInputObjectType} from 'graphql/type/definition.js';
 import type { ObjMap } from 'graphql/jsutils/ObjMap.js';
+import {Prisma} from ".prisma/client";
+
+export interface IUserCreateInputArgs {
+  dto: Prisma.UserCreateInput
+}
 
 export const User = new GraphQLObjectType<IStringIdArg, GraphQLContext>({
   name: 'User',
@@ -59,4 +64,12 @@ export const User = new GraphQLObjectType<IStringIdArg, GraphQLContext>({
         }),
     },
   }),
+});
+
+export const CreateUserInput = new GraphQLInputObjectType({
+  name: 'CreateUserInput',
+  fields: {
+    name: { type: new GraphQLNonNull(GraphQLString) },
+    balance: { type: new GraphQLNonNull(GraphQLFloat) },
+  }
 });

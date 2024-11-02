@@ -3,12 +3,14 @@ import { createGqlResponseSchema, gqlResponseSchema } from './schemas.js';
 import { graphql, GraphQLSchema } from 'graphql';
 import {RootQueryType} from './types/query.js';
 import {GraphQLObjectType} from "graphql/index.js";
+import {Mutations} from "./types/mutation.js";
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
   const { prisma } = fastify;
 
   const handlerSchema = new GraphQLSchema({
     query: RootQueryType as GraphQLObjectType,
+    mutation: Mutations as GraphQLObjectType,
   });
 
   const context = { prisma };

@@ -1,10 +1,11 @@
 import { GraphQLList, GraphQLNonNull, GraphQLObjectType } from 'graphql/index.js';
 import { UUIDType } from './uuid.js';
 import { MemberType, MemberTypeId } from './memberType.js';
-import { GraphQLContext, IStringIdArg } from '../type.js';
+import { GraphQLContext } from '../type.js';
 import { User } from './user.js';
 import { Post } from './post.js';
 import { Profile } from './profile.js';
+import {IStringIdArg} from "./common.js";
 
 export const RootQueryType = new GraphQLObjectType<never, GraphQLContext>({
   name: 'RootQueryType',

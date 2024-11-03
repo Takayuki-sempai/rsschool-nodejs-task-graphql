@@ -1,7 +1,6 @@
-import { GraphQLContext, IStringIdArg } from '../type.js';
+import { GraphQLContext} from '../type.js';
 import {
-  GraphQLBoolean,
-  GraphQLFloat, GraphQLInt,
+  GraphQLFloat,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -14,7 +13,7 @@ import {GraphQLFieldConfig, GraphQLInputObjectType} from 'graphql/type/definitio
 import type { ObjMap } from 'graphql/jsutils/ObjMap.js';
 import {Prisma} from ".prisma/client";
 import {UUID} from "node:crypto";
-import {MemberTypeId} from "./memberType.js";
+import {IStringIdArg} from "./common.js";
 
 export interface IUserCreateInputArgs {
   dto: Prisma.UserUncheckedCreateInput

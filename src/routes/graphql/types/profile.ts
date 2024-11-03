@@ -2,7 +2,7 @@ import {
   GraphQLBoolean,
   GraphQLInt,
   GraphQLNonNull,
-  GraphQLObjectType, GraphQLString,
+  GraphQLObjectType,
 } from 'graphql/index.js';
 import { GraphQLContext } from '../type.js';
 import { IMemberTypeIdArg, MemberType, MemberTypeId } from './memberType.js';

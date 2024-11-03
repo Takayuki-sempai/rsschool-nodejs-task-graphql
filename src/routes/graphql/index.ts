@@ -5,6 +5,7 @@ import { RootQueryType } from './types/query.js';
 import { GraphQLObjectType } from 'graphql/index.js';
 import { Mutations } from './types/mutation.js';
 import depthLimit from 'graphql-depth-limit';
+import {createLoaders} from "./loaders.js";
 
 const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
   const { prisma } = fastify;
@@ -13,8 +14,6 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
     query: RootQueryType as GraphQLObjectType,
     mutation: Mutations as GraphQLObjectType,
   });
-
-  const context = { prisma };
 
   fastify.route({
     url: '/',
@@ -31,11 +30,14 @@ const plugin: FastifyPluginAsyncTypebox = async (fastify) => {
       if (errors.length !== 0) {
         return { errors, data: null };
       }
+
+      const loaders = await createLoaders(prisma);
+
       return graphql({
         schema: handlerSchema,
         source: req.body.query,
         variableValues: req.body.variables,
-        contextValue: context,
+        contextValue: { prisma, loaders },
       });
     },
   });

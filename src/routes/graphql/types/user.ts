@@ -37,15 +37,13 @@ export const User = new GraphQLObjectType<IStringIdArg, GraphQLContext>({
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
     profile: {
       type: Profile,
-      resolve: async (source: IStringIdArg, _args, { prisma }) =>
-        prisma.profile.findUnique({
-          where: { userId: source.id },
-        }),
+      resolve: async (source: IStringIdArg, _args, { loaders }) =>
+        loaders.profileByUserId.load(source.id),
     },
     posts: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))),
       resolve: async (source: IStringIdArg, _args, { loaders }) =>
-          await loaders.postsByAuthorIdLoader.load(source.id)
+        loaders.postsByAuthorIdLoader.load(source.id),
     },
     userSubscribedTo: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),

@@ -2,16 +2,22 @@ import {
   GraphQLBoolean,
   GraphQLInt,
   GraphQLNonNull,
-  GraphQLObjectType,
+  GraphQLObjectType, GraphQLString,
 } from 'graphql/index.js';
 import { GraphQLContext } from '../type.js';
 import { IMemberTypeIdArg, MemberType, MemberTypeId } from './memberType.js';
 import { UUIDType } from './uuid.js';
 import { GraphQLInputObjectType } from 'graphql/type/definition.js';
 import {Prisma} from '.prisma/client';
+import {UUID} from "node:crypto";
 
 export interface IProfileCreateInputArgs {
   dto: Prisma.ProfileUncheckedCreateInput;
+}
+
+export interface IProfileChangeInputArgs {
+  id: UUID;
+  dto: Prisma.ProfileUncheckedUpdateInput;
 }
 
 export const Profile = new GraphQLObjectType<IMemberTypeIdArg, GraphQLContext>({
@@ -37,5 +43,14 @@ export const CreateProfileInput = new GraphQLInputObjectType({
     yearOfBirth: { type: new GraphQLNonNull(GraphQLInt) },
     userId: { type: new GraphQLNonNull(UUIDType) },
     memberTypeId: { type: new GraphQLNonNull(MemberTypeId) },
+  },
+});
+
+export const ChangeProfileInput = new GraphQLInputObjectType({
+  name: 'ChangeProfileInput',
+  fields: {
+    isMale: { type: GraphQLBoolean },
+    yearOfBirth: { type: GraphQLInt },
+    memberTypeId: { type: MemberTypeId },
   },
 });

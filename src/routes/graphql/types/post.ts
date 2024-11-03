@@ -2,9 +2,15 @@ import { GraphQLNonNull, GraphQLObjectType, GraphQLString } from 'graphql/index.
 import { UUIDType } from './uuid.js';
 import { GraphQLInputObjectType } from 'graphql/type/definition.js';
 import { Prisma } from '.prisma/client';
+import { UUID } from 'node:crypto';
 
 export interface IPostCreateInputArgs {
   dto: Prisma.PostUncheckedCreateInput;
+}
+
+export interface IPostChangeInputArgs {
+  id: UUID;
+  dto: Prisma.PostUncheckedUpdateInput;
 }
 
 export const Post = new GraphQLObjectType({
@@ -22,5 +28,13 @@ export const CreatePostInput = new GraphQLInputObjectType({
     title: { type: new GraphQLNonNull(GraphQLString) },
     content: { type: new GraphQLNonNull(GraphQLString) },
     authorId: { type: new GraphQLNonNull(UUIDType) },
+  },
+});
+
+export const ChangePostInput = new GraphQLInputObjectType({
+  name: 'ChangePostInput',
+  fields: {
+    title: { type: GraphQLString },
+    content: { type: GraphQLString },
   },
 });

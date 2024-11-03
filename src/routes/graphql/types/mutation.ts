@@ -1,8 +1,15 @@
 import { GraphQLNonNull, GraphQLObjectType } from 'graphql/index.js';
 import { GraphQLContext } from '../type.js';
-import { CreateUserInput, IUserCreateInputArgs, User } from './user.js';
-import { CreateProfileInput, IProfileCreateInputArgs, Profile } from './profile.js';
-import { CreatePostInput, IPostCreateInputArgs, Post } from './post.js';
+import {ChangeUserInput, CreateUserInput, IUserChangeInputArgs, IUserCreateInputArgs, User} from './user.js';
+import {
+  ChangeProfileInput,
+  CreateProfileInput,
+  IProfileChangeInputArgs,
+  IProfileCreateInputArgs,
+  Profile
+} from './profile.js';
+import {ChangePostInput, CreatePostInput, IPostChangeInputArgs, IPostCreateInputArgs, Post} from './post.js';
+import {UUIDType} from "./uuid.js";
 
 export const Mutations = new GraphQLObjectType<never, GraphQLContext>({
   name: 'Mutations',
@@ -36,6 +43,42 @@ export const Mutations = new GraphQLObjectType<never, GraphQLContext>({
         await prisma.post.create({
           data: dto,
         }),
+    },
+    changePost: {
+      type: new GraphQLNonNull(Post),
+      args: {
+        id: {type: new GraphQLNonNull(UUIDType)},
+        dto: {type: new GraphQLNonNull(ChangePostInput)},
+      },
+      resolve: async (_source, {id, dto}: IPostChangeInputArgs, {prisma}) =>
+          await prisma.post.update({
+            where: {id: id},
+            data: dto,
+          })
+    },
+    changeProfile: {
+      type: new GraphQLNonNull(Profile),
+      args: {
+        id: {type: new GraphQLNonNull(UUIDType)},
+        dto: {type: new GraphQLNonNull(ChangeProfileInput)},
+      },
+      resolve: async (_source, {id, dto}: IProfileChangeInputArgs, {prisma}) =>
+          await prisma.profile.update({
+            where: {id: id},
+            data: dto,
+          })
+    },
+    changeUser: {
+      type: new GraphQLNonNull(User),
+      args: {
+        id: {type: new GraphQLNonNull(UUIDType)},
+        dto: {type: new GraphQLNonNull(ChangeUserInput)},
+      },
+      resolve: async (_source, {id, dto}: IUserChangeInputArgs, {prisma}) =>
+          await prisma.user.update({
+            where: {id: id},
+            data: dto,
+          })
     },
   },
 });

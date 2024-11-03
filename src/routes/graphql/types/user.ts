@@ -1,6 +1,7 @@
 import { GraphQLContext, IStringIdArg } from '../type.js';
 import {
-  GraphQLFloat,
+  GraphQLBoolean,
+  GraphQLFloat, GraphQLInt,
   GraphQLList,
   GraphQLNonNull,
   GraphQLObjectType,
@@ -12,9 +13,16 @@ import { Post } from './post.js';
 import {GraphQLFieldConfig, GraphQLInputObjectType} from 'graphql/type/definition.js';
 import type { ObjMap } from 'graphql/jsutils/ObjMap.js';
 import {Prisma} from ".prisma/client";
+import {UUID} from "node:crypto";
+import {MemberTypeId} from "./memberType.js";
 
 export interface IUserCreateInputArgs {
   dto: Prisma.UserUncheckedCreateInput
+}
+
+export interface IUserChangeInputArgs {
+  id: UUID;
+  dto: Prisma.UserUncheckedUpdateInput;
 }
 
 export const User = new GraphQLObjectType<IStringIdArg, GraphQLContext>({
@@ -72,4 +80,12 @@ export const CreateUserInput = new GraphQLInputObjectType({
     name: { type: new GraphQLNonNull(GraphQLString) },
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
   }
+});
+
+export const ChangeUserInput = new GraphQLInputObjectType({
+  name: 'ChangeUserInput',
+  fields: {
+    name: { type: GraphQLString },
+    balance: { type: GraphQLFloat },
+  },
 });

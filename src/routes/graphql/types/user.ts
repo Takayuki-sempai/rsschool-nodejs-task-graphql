@@ -14,7 +14,7 @@ import type { ObjMap } from 'graphql/jsutils/ObjMap.js';
 import {Prisma} from ".prisma/client";
 
 export interface IUserCreateInputArgs {
-  dto: Prisma.UserCreateInput
+  dto: Prisma.UserUncheckedCreateInput
 }
 
 export const User = new GraphQLObjectType<IStringIdArg, GraphQLContext>({

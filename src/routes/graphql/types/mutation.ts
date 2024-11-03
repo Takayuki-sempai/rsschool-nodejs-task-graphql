@@ -5,6 +5,7 @@ import {
   CreateUserInput,
   IUserChangeInputArgs,
   IUserCreateInputArgs,
+  IUserSubscribeToInputArgs,
   User,
 } from './user.js';
 import {
@@ -125,6 +126,57 @@ export const Mutations = new GraphQLObjectType<never, GraphQLContext>({
       resolve: async (_source, { id }: IDeleteInputArgs, { prisma }) => {
         await prisma.profile.delete({
           where: { id: id },
+        });
+        return '';
+      },
+    },
+    subscribeTo: {
+      type: new GraphQLNonNull(GraphQLString),
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      },
+      resolve: async (
+        _source,
+        { userId, authorId }: IUserSubscribeToInputArgs,
+        { prisma },
+      ) => {
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            userSubscribedTo: {
+              create: {
+                authorId: authorId,
+              },
+            },
+          },
+        });
+        return '';
+      },
+    },
+    unsubscribeFrom: {
+      type: new GraphQLNonNull(GraphQLString),
+      args: {
+        userId: { type: new GraphQLNonNull(UUIDType) },
+        authorId: { type: new GraphQLNonNull(UUIDType) },
+      },
+      resolve: async (
+        _source,
+        { userId, authorId }: IUserSubscribeToInputArgs,
+        { prisma },
+      ) => {
+        await prisma.user.update({
+          where: { id: userId },
+          data: {
+            userSubscribedTo: {
+              delete: {
+                subscriberId_authorId: {
+                  subscriberId: userId,
+                  authorId: authorId,
+                },
+              },
+            },
+          },
         });
         return '';
       },

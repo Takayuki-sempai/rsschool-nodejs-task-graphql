@@ -1,4 +1,4 @@
-import { GraphQLContext} from '../type.js';
+import { GraphQLContext } from '../type.js';
 import {
   GraphQLFloat,
   GraphQLList,
@@ -9,19 +9,24 @@ import {
 import { UUIDType } from './uuid.js';
 import { Profile } from './profile.js';
 import { Post } from './post.js';
-import {GraphQLFieldConfig, GraphQLInputObjectType} from 'graphql/type/definition.js';
+import { GraphQLFieldConfig, GraphQLInputObjectType } from 'graphql/type/definition.js';
 import type { ObjMap } from 'graphql/jsutils/ObjMap.js';
-import {Prisma} from ".prisma/client";
-import {UUID} from "node:crypto";
-import {IStringIdArg} from "./common.js";
+import { Prisma } from '.prisma/client';
+import { UUID } from 'node:crypto';
+import { IStringIdArg } from './common.js';
 
 export interface IUserCreateInputArgs {
-  dto: Prisma.UserUncheckedCreateInput
+  dto: Prisma.UserUncheckedCreateInput;
 }
 
 export interface IUserChangeInputArgs {
   id: UUID;
   dto: Prisma.UserUncheckedUpdateInput;
+}
+
+export interface IUserSubscribeToInputArgs {
+  userId: UUID;
+  authorId: UUID;
 }
 
 export const User = new GraphQLObjectType<IStringIdArg, GraphQLContext>({
@@ -78,7 +83,7 @@ export const CreateUserInput = new GraphQLInputObjectType({
   fields: {
     name: { type: new GraphQLNonNull(GraphQLString) },
     balance: { type: new GraphQLNonNull(GraphQLFloat) },
-  }
+  },
 });
 
 export const ChangeUserInput = new GraphQLInputObjectType({

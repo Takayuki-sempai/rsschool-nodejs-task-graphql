@@ -38,7 +38,7 @@ export const User = new GraphQLObjectType<IStringIdArg, GraphQLContext>({
     profile: {
       type: Profile,
       resolve: async (source: IStringIdArg, _args, { loaders }) =>
-        loaders.profileByUserId.load(source.id),
+        loaders.profileByUserIdLoader.load(source.id),
     },
     posts: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(Post))),

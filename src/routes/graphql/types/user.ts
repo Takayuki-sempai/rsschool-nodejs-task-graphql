@@ -47,29 +47,13 @@ export const User = new GraphQLObjectType<IStringIdArg, GraphQLContext>({
     },
     userSubscribedTo: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
-      resolve: async (source: IStringIdArg, _args, { prisma }) =>
-        await prisma.user.findMany({
-          where: {
-            subscribedToUser: {
-              some: {
-                subscriberId: source.id,
-              },
-            },
-          },
-        }),
+      resolve: async (source: IStringIdArg, _args, { loaders }) =>
+          loaders.userSubscribedToLoader.load(source.id)
     },
     subscribedToUser: {
       type: new GraphQLNonNull(new GraphQLList(new GraphQLNonNull(User))),
-      resolve: async (source: IStringIdArg, _args, { prisma }) =>
-        await prisma.user.findMany({
-          where: {
-            userSubscribedTo: {
-              some: {
-                authorId: source.id,
-              },
-            },
-          },
-        }),
+      resolve: async (source: IStringIdArg, _args, { loaders }) =>
+          loaders.subscribedToUserLoader.load(source.id)
     },
   }),
 });

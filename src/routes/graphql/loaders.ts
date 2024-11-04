@@ -104,10 +104,10 @@ export const createLoaders = async (prisma: PrismaClient): Promise<IDataLoaders>
   memberTypeByIdLoader: new DataLoader((keys: readonly string[]) =>
     batchMemberTypeById(prisma, keys as string[]),
   ),
+  subscribedToUserLoader: new DataLoader((keys: readonly string[]) =>
+      batchSubscribedToUser(prisma, keys as string[]),
+  ),
   userSubscribedToLoader: new DataLoader((keys: readonly string[]) =>
       batchUserSubscribedTo(prisma, keys as string[]),
-  ),
-  subscribedToUserLoader: new DataLoader((keys: readonly string[]) =>
-    batchSubscribedToUser(prisma, keys as string[]),
   ),
 });
